@@ -4,16 +4,9 @@ namespace DemoSignalR.Hubs
 {
     public class NotificationHub : Hub
     {
-        public async Task NewMessage(Message msg)
+        public async Task NewMessage(string msg)
         {
-            await Clients.All.SendAsync("MessageReceived", msg);
+            await Clients.All.SendAsync("MessageReceived1", msg);
         }
-    }
-
-    public class Message
-    {
-        public string ClientId { get; set; }
-        public string Text { get; set; }
-        public DateTime Date { get; set; }
     }
 }

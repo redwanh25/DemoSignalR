@@ -1,8 +1,18 @@
 using DemoSignalR.Hubs;
 
+var allowAllHeaders = "AllowAllHeaders";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowAllHeaders,
+                      builder => {
+                          builder.WithOrigins("http://localhost:46791/")
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod();
+                      });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(allowAllHeaders);
 app.UseAuthorization();
 
 app.MapControllers();

@@ -20,7 +20,7 @@ namespace DemoSignalR.Controllers
         [HttpGet("Get1")]
         public async Task Get1Async()
         {
-            await hubContext.Clients.All.SendAsync("MessageReceived", "Redwan");
+            await hubContext.Clients.All.SendAsync("MessageReceived2", "success");
         }
 
         [HttpGet("Get2")]
