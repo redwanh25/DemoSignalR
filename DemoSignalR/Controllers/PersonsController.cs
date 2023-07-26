@@ -37,7 +37,7 @@ namespace DemoSignalR.Controllers
         [HttpGet("Get2")]
         public async Task<List<Person>> Get2Async()
         {
-            var persons = await _context.Persons.ToListAsync();
+            var persons = await _context.Persons.OrderByDescending(x => x.Id).Take(5).ToListAsync();
 
             return persons;
         }
