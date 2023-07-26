@@ -1,6 +1,7 @@
 using DemoSignalR.Context;
 using DemoSignalR.Hubs;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var allowAllHeaders = "AllowAllHeaders";
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-
+builder.Host.UseSerilog((hostingContext, configuration) =>
+{
+    configuration
+    .Enrich.FromLogContext()
+    .ReadFrom.Configuration(hostingContext.Configuration);
+});
 
 var app = builder.Build();
 
