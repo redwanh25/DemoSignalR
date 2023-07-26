@@ -1,7 +1,10 @@
-﻿using DemoSignalR.Hubs;
+﻿using DemoSignalR.Context;
+using DemoSignalR.Hubs;
+using DemoSignalR.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoSignalR.Controllers
 {
@@ -9,24 +12,34 @@ namespace DemoSignalR.Controllers
     [ApiController]
     public class PersonsController : ControllerBase
     {
-        private readonly List<string> list = new() { "Rahim", "Karim" };
-        private readonly IHubContext<NotificationHub> hubContext;
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly ApplicationDbContext _context;
 
-        public PersonsController(IHubContext<NotificationHub> context)
+        public PersonsController(IHubContext<NotificationHub> hubContext, ApplicationDbContext context)
         {
-            hubContext = context;
+            _hubContext = hubContext;
+            _context = context;
         }
 
         [HttpGet("Get1")]
         public async Task Get1Async()
         {
-            await hubContext.Clients.All.SendAsync("MessageReceived2", "success");
+            Random rnd = new Random();
+            var person = new Person() {
+                Name = "Redwan" + rnd.Next(100),
+            };
+            _context.Persons.Add(person);
+            _context.SaveChanges();
+
+            await _hubContext.Clients.All.SendAsync("Get1Client", "success");
         }
 
         [HttpGet("Get2")]
-        public List<string> Get2()
+        public async Task<List<Person>> Get2Async()
         {
-            return list;
+            var persons = await _context.Persons.ToListAsync();
+
+            return persons;
         }
     }
 }

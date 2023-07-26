@@ -1,4 +1,6 @@
+using DemoSignalR.Context;
 using DemoSignalR.Hubs;
+using Microsoft.EntityFrameworkCore;
 
 var allowAllHeaders = "AllowAllHeaders";
 var builder = WebApplication.CreateBuilder(args);
@@ -15,14 +17,15 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Add middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

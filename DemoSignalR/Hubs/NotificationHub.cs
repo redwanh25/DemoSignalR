@@ -6,7 +6,7 @@ namespace DemoSignalR.Hubs
     {
         public async Task NewMessage(string msg)
         {
-            await Clients.All.SendAsync("MessageReceived1", msg);
+            await Clients.All.SendAsync("NewMessageReceived", msg);
         }
     }
 }
